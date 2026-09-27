@@ -138,3 +138,29 @@ def test_list_documents_endpoint():
     if items:
         assert "document_name" in items[0]
         assert "processing_status" in items[0]
+
+
+def test_dashboard_ui():
+    """Verify frontend dashboard HTML renders successfully."""
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "DocIntel Platform" in response.text
+    assert "Upload & Process Document" in response.text
+
+
+def test_document_detail_ui():
+    """Verify document detail result page renders successfully."""
+    pdf_bytes = create_sample_invoice_pdf()
+    files = {"file": ("ui_test_doc.pdf", pdf_bytes, "application/pdf")}
+    data = {"document_type": "invoice"}
+    post_resp = client.post("/api/v1/documents/process", files=files, data=data)
+    assert post_resp.status_code == 200
+
+    # Retrieve dashboard to get DB id
+    docs_resp = client.get("/api/v1/documents")
+    doc_id = docs_resp.json()[0]["id"]
+
+    view_resp = client.get(f"/documents/{doc_id}")
+    assert view_resp.status_code == 200
+    assert "Financial Reconciliation & Arithmetic Validations" in view_resp.text
+

@@ -72,8 +72,9 @@ def dashboard_view(request: Request, db: Session = Depends(get_db)):
     service = DocumentService(db)
     docs = service.list_documents(limit=100)
     return templates.TemplateResponse(
-        "dashboard.html",
-        {"request": request, "documents": docs, "api_base": settings.API_V1_PREFIX}
+        request=request,
+        name="dashboard.html",
+        context={"documents": docs, "api_base": settings.API_V1_PREFIX}
     )
 
 
@@ -84,9 +85,9 @@ def document_result_view(doc_id: int, request: Request, db: Session = Depends(ge
     doc_dict = service.get_by_id(doc_id)
     if not doc_dict:
         return templates.TemplateResponse(
-            "dashboard.html",
-            {
-                "request": request,
+            request=request,
+            name="dashboard.html",
+            context={
                 "error": f"Document ID {doc_id} not found.",
                 "documents": service.list_documents(limit=100),
                 "api_base": settings.API_V1_PREFIX
@@ -94,8 +95,9 @@ def document_result_view(doc_id: int, request: Request, db: Session = Depends(ge
             status_code=404
         )
     return templates.TemplateResponse(
-        "document_result.html",
-        {"request": request, "doc": doc_dict, "api_base": settings.API_V1_PREFIX}
+        request=request,
+        name="document_result.html",
+        context={"doc": doc_dict, "api_base": settings.API_V1_PREFIX}
     )
 
 
