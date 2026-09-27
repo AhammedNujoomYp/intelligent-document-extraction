@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Intelligent Document Extraction, Validation & API Platform
 
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
@@ -328,3 +329,6 @@ The financial validation engine runs strict arithmetic checks as defined in Sect
 In compliance with Section 14 (Permitted Use of Generative AI):
 - **Antigravity / Gemini:** Used for architecture scaffolding, regex verification, test case generation, and design of frontend templates.
 - **All generated code and validation algorithms were verified, unit-tested, and audited.**
+=======
+# intelligent-document-extraction
+>>>>>>> 7a333c87096f08b06f6c942865888c5ca8bcfe5f
