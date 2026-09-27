@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: intelligent-document-extraction
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        value: sqlite:///./documents.db
+      - key: MAX_PAGE_LIMIT
+        value: 3
+      - key: FINANCIAL_TOLERANCE
+        value: 0.05
+      - key: GEMINI_API_KEY
+        sync: false

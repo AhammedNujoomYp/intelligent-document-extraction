@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution Presentation: Intelligent Document Extraction, Validation & API Platform</title>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --accent: #3b82f6;
+            --bg: #0f172a;
+            --slide-bg: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --card-bg: #334155;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2.5rem;
+        }
+        .slide {
+            width: 100%;
+            max-width: 960px;
+            aspect-ratio: 16 / 9;
+            background-color: var(--slide-bg);
+            border-radius: 14px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            border: 1px solid #475569;
+            page-break-after: always;
+        }
+        .slide-header {
+            border-bottom: 2px solid #475569;
+            padding-bottom: 1rem;
+        }
+        .slide-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+        .slide-subtitle {
+            font-size: 1rem;
+            color: var(--muted);
+            margin-top: 0.35rem;
+        }
+        .slide-body {
+            flex: 1;
+            margin: 1.5rem 0;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            height: 100%;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.25rem;
+            height: 100%;
+        }
+        .card {
+            background-color: var(--card-bg);
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid #475569;
+        }
+        .card-title {
+            font-weight: 700;
+            color: #38bdf8;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .slide-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--muted);
+            border-top: 1px solid #334155;
+            padding-top: 0.75rem;
+        }
+        .badge {
+            background-color: #2563eb;
+            color: #fff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        ul { margin-left: 1.25rem; }
+        li { margin-bottom: 0.5rem; }
+        @media print {
+            body { padding: 0; background: none; }
+            .slide { box-shadow: none; border: none; width: 100vw; height: 100vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1: Title -->
+    <div class="slide">
+        <div></div>
+        <div style="text-align: center;">
+            <span class="badge" style="font-size: 1rem; padding: 0.4rem 1rem; margin-bottom: 1rem; display: inline-block;">
+                AI Engineer Internship Case Study
+            </span>
+            <h1 style="font-size: 2.75rem; font-weight: 800; color: #ffffff; margin-bottom: 1rem;">
+                Intelligent Document Extraction, Validation & API Platform
+            </h1>
+            <p style="font-size: 1.25rem; color: #94a3b8; max-width: 700px; margin: 0 auto;">
+                A production-ready AI service for automated financial document processing, mathematical reconciliation, and persistent REST API integration.
+            </p>
+        </div>
+        <div class="slide-footer">
+            <span>Candidate Assessment - Document Intelligence</span>
+            <span>Slide 1 / 8</span>
+        </div>
+    </div>
+
+    <!-- Slide 2: Problem Statement -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">1. Problem Statement & Scope</h2>
+            <p class="slide-subtitle">Addressing manual document processing bottlenecks in financial services</p>
+        </div>
+        <div class="slide-body grid-2">
+            <div class="card">
+                <div class="card-title">Challenges Identified</div>
+                <ul>
+                    <li>Diverse, unstructured formats (Native & Scanned PDFs, JPG, PNG).</li>
+                    <li>Manual extraction is error-prone, inconsistent, and slow.</li>
+                    <li>OCR inaccuracies cascade into invalid financial records.</li>
+                    <li>Need for auditable evidence grounding and mathematical reconciliation.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">Documents in Scope</div>
+                <ul>
+                    <li><strong>Invoices:</strong> Headers, vendor, customer, line items table, subtotal, tax, discount, total.</li>
+                    <li><strong>Balance Sheets:</strong> Assets, liabilities, equity, and multi-period reporting.</li>
+                    <li><strong>Profit & Loss:</strong> Income, expenditures, operating/net profit, appropriations.</li>
+                    <li><strong>Cash Flow Statements:</strong> Operating, investing, financing cash flows, bracketed negatives.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>Candidate Assessment - Document Intelligence</span>
+            <span>Slide 2 / 8</span>
+        </div>
+    </div>
+
+    <!-- Slide 3: Architecture -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">2. End-to-End System Architecture</h2>
+            <p class="slide-subtitle">Modular pipeline separating concerns from ingestion to presentation</p>
+        </div>
+        <div class="slide-body">
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-title">1. Input Control</div>
+                    <p style="font-size: 0.95rem;">Validates MIME magic bytes, document integrity, and enforces strict &le;3 pages limit. Fails gracefully with controlled JSON error.</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">2. Hybrid Extraction</div>
+                    <p style="font-size: 0.95rem;">PyPDF native digital text parser + Gemini/OpenAI Multimodal vision + offline heuristic fallback engine.</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">3. Financial Engine</div>
+                    <p style="font-size: 0.95rem;">Arithmetic reconciliation engine verifying formula integrity, line-item multiplications, and variances under 0.05 tolerance.</p>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 1rem;">
+                <div class="card-title">Persistence & API Gateway</div>
+                <p style="font-size: 0.95rem;">FastAPI endpoints, SQLAlchemy ORM repository, SQLite/PostgreSQL storage, interactive HTML/JS dashboard & OpenAPI Swagger docs.</p>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>Candidate Assessment - Document Intelligence</span>
+            <span>Slide 3 / 8</span>
+        </div>
+    </div>
+
+    <!-- Slide 4: Input Validation & Security -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">3. Input Validation & Security Guardrails</h2>
+            <p class="slide-subtitle">Defensive engineering practices adhering to Section 4.1</p>
+        </div>
+        <div class="slide-body grid-2">
+            <div class="card">
+                <div class="card-title">Multi-Stage File Verification</div>
+                <ul>
+                    <li><strong>MIME & Magic Bytes:</strong> Verifies `%PDF`, `\xff\xd8\xff`, `\x89PNG`.</li>
+                    <li><strong>Page Limit Enforcer:</strong> Enforces strictly &le; 3 pages. Rejects &gt; 3 pages with `EXCEEDS_PAGE_LIMIT`.</li>
+                    <li><strong>Corruption & Tamper Check:</strong> Tests parser load and raises `CORRUPTED_PDF` without crashing.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">Security & Error Contracts</div>
+                <ul>
+                    <li><strong>No Secrets in Code:</strong> Environment variable injection via `.env`.</li>
+                    <li><strong>Standardized Error Responses:</strong> Strict Section 5.3 compliance `{"error": {"code": "...", "message": "..."}}`.</li>
+                    <li><strong>Safe Disk Handling:</strong> Sanitized timestamps and filenames to prevent path traversal attacks.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>Candidate Assessment - Document Intelligence</span>
+            <span>Slide 4 / 8</span>
+        </div>
+    </div>
+
+    <!-- Slide 5: Extraction & Grounding -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">4. Complete Field & Table Extraction</h2>
+            <p class="slide-subtitle">Precision, explainable confidence, and source grounding</p>
+        </div>
+        <div class="slide-body grid-2">
+            <div class="card">
+                <div class="card-title">Explainable Evidence Grounding</div>
+                <ul>
+                    <li>Values mapped with exact text snippets (`source_text`) and 1-indexed `page_number`.</li>
+                    <li>Missing fields returned as `null` (zero hallucination policy).</li>
+                    <li>Explainable confidence scores computed based on signal clarity and pattern strength.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">Tables & Structured Line Items</div>
+                <ul>
+                    <li>Invoices: Extracts Item Description, Quantity, Unit Price, and Amount into structured arrays.</li>
+                    <li>Balance Sheets: Segregates Current/Non-Current Assets and Liabilities.</li>
+                    <li>Multi-period comparative financials supported independently.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>Candidate Assessment - Document Intelligence</span>
+            <span>Slide 5 / 8</span>
+        </div>
+    </div>
+
+    <!-- Slide 6: Financial Validation Engine -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">5. Financial Validation & Accounting Rules</h2>
+            <p class="slide-subtitle">Section 4.4 Financial integrity and arithmetic verification</p>
+        </div>
+        <div class="slide-body grid-2">
+            <div class="card">
+                <div class="card-title">Validation Checks Executed</div>
+                <ul>
+                    <li><strong>Invoice:</strong> Quantity &times; Unit Price &approx; Line Total; Sum of line items &approx; Subtotal; Subtotal + Tax &minus; Discount &approx; Total (including GST-inclusive).</li>
+                    <li><strong>Balance Sheet:</strong> Total Capital &amp; Liabilities &approx; Total Assets; Component sum checks.</li>
+                    <li><strong>Profit &amp; Loss:</strong> Total Income, Total Expenditure, Net profit before minority, Consolidated profit, Appropriations.</li>
+                    <li><strong>Cash Flow:</strong> Operating + Investing + Financing + FX &approx; Net Change; Opening + Net Change &approx; Closing.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">Robust Edge Cases Handled</div>
+                <ul>
+                    <li><strong>Bracketed / Negative Numbers:</strong> Parses `(45,000)` &rarr; `-45000.0`.</li>
+                    <li><strong>Missing Fields Handling:</strong> Returns `NOT_APPLICABLE` rather than assuming or inventing zeros.</li>
+                    <li><strong>Numerical Tolerance:</strong> Configurable tolerance (&le; 0.05) to accommodate standard currency rounding.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>Candidate Assessment - Document Intelligence</span>
+            <span>Slide 6 / 8</span>
+        </div>
+    </div>
+
+    <!-- Slide 7: Frontend & API -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">6. User Interface & REST API Quality</h2>
+            <p class="slide-subtitle">Intuitive dashboard, detailed result inspector, and OpenAPI endpoints</p>
+        </div>
+        <div class="slide-body grid-2">
+            <div class="card">
+                <div class="card-title">Frontend Dashboard Experience</div>
+                <ul>
+                    <li>Drag &amp; drop document upload with instant progress indicator.</li>
+                    <li>Audit history table with search, type filters, and PASS/FAIL badges.</li>
+                    <li>Detailed document inspection view highlighting missing fields in red and low-confidence values in yellow.</li>
+                    <li>Raw JSON viewer with 1-click clipboard copy.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">REST API Specifications</div>
+                <ul>
+                    <li>`POST /api/v1/documents/process` (Multipart processing)</li>
+                    <li>`GET /api/v1/documents/{document_name}` (Latest structured result)</li>
+                    <li>`GET /api/v1/documents` (Paginated list for dashboard)</li>
+                    <li>`GET /api/v1/health` (Health &amp; uptime monitoring)</li>
+                    <li>Interactive documentation at `/docs` (Swagger UI).</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>Candidate Assessment - Document Intelligence</span>
+            <span>Slide 7 / 8</span>
+        </div>
+    </div>
+
+    <!-- Slide 8: Deployment & Next Steps -->
+    <div class="slide">
+        <div class="slide-header">
+            <h2 class="slide-title">7. Deployment & Production Roadmap</h2>
+            <p class="slide-subtitle">Ready for containerized deployment and cloud scaling</p>
+        </div>
+        <div class="slide-body grid-2">
+            <div class="card">
+                <div class="card-title">Containerized Cloud Deployment</div>
+                <ul>
+                    <li>Multi-stage `Dockerfile` with system OCR dependencies.</li>
+                    <li>`render.yaml` specification for zero-downtime deployment on Render, Railway, or Koyeb.</li>
+                    <li>23/23 Automated Unit &amp; Integration Pytest test suite passing in CI.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-title">Production Improvements</div>
+                <ul>
+                    <li>Asynchronous job queuing using Celery / Redis for large batch workflows.</li>
+                    <li>Vector DB integration for semantic search across historical documents.</li>
+                    <li>Role-based access control (RBAC) and OAuth2 authentication.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span>Candidate Assessment - Document Intelligence</span>
+            <span>Slide 8 / 8</span>
+        </div>
+    </div>
+
+</body>
+</html>

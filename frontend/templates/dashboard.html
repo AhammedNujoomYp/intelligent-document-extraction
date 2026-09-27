@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Document Extraction Platform</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/" class="brand">
+            <span class="brand-icon">📑</span>
+            <span>DocIntel Platform</span>
+        </a>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Dashboard</a>
+            <a href="/docs" target="_blank" class="nav-link">Swagger API Docs</a>
+            <a href="/api/v1/health" target="_blank" class="nav-link">Health API</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Error Alert Container -->
+        <div id="errorAlert" class="alert alert-danger" style="display: {% if error %}flex{% else %}none{% endif %};">
+            <span style="font-weight: 700;">Error:</span>
+            <span id="errorMessage">{{ error if error else '' }}</span>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Document Intelligence Dashboard</h1>
+                <p class="page-subtitle">Extract, reconcile, and validate financial documents (PDF / JPG / PNG up to 3 pages)</p>
+            </div>
+        </div>
+
+        <!-- Upload & Process Card -->
+        <div class="upload-card">
+            <h2 class="section-title">Upload & Process Document</h2>
+            <form id="uploadForm" class="upload-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="documentType" class="form-label">Document Schema Type</label>
+                        <select id="documentType" name="document_type" class="form-select" required>
+                            <option value="invoice">Invoice</option>
+                            <option value="balance_sheet">Balance Sheet</option>
+                            <option value="profit_and_loss">Profit & Loss (P&L)</option>
+                            <option value="cash_flow_statement">Cash Flow Statement</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Select Document (PDF / JPG / PNG, Max 3 pages)</label>
+                        <div id="dropzone" class="dropzone">
+                            <input type="file" id="fileInput" name="file" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" required>
+                            <p id="selectedFileName">Drag and drop file here, or <strong>browse</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="justify-content: flex-end;">
+                        <button type="submit" id="uploadBtn" class="btn btn-primary" style="height: 44px; min-width: 170px;">
+                            <span id="uploadSpinner" class="spinner" style="display: none;"></span>
+                            <span id="uploadBtnText">Upload & Process</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Overview Metrics -->
+        {% set total_docs = documents|length %}
+        {% set pass_docs = documents|selectattr("processing_status", "equalto", "PASS")|list|length %}
+        {% set fail_docs = documents|selectattr("processing_status", "equalto", "FAILED")|list|length %}
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Processed</div>
+                <div class="stat-value">{{ total_docs }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Validations Passed</div>
+                <div class="stat-value" style="color: var(--success);">{{ pass_docs }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Validations Failed</div>
+                <div class="stat-value" style="color: var(--danger);">{{ fail_docs }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Supported Formats</div>
+                <div class="stat-value" style="font-size: 1.3rem; margin-top: 0.8rem; color: var(--primary);">
+                    PDF, JPG, PNG
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="section-card" style="padding: 1rem 1.5rem; margin-bottom: 1rem;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 1.1rem; font-weight: 600;">Processed Documents History</h3>
+                <div style="display: flex; gap: 0.75rem;">
+                    <input type="text" id="searchDocuments" class="form-control" placeholder="Search by filename..." style="width: 240px;">
+                    <select id="filterType" class="form-select" style="width: 180px;">
+                        <option value="">All Document Types</option>
+                        <option value="invoice">Invoice</option>
+                        <option value="balance_sheet">Balance Sheet</option>
+                        <option value="profit_and_loss">Profit & Loss</option>
+                        <option value="cash_flow_statement">Cash Flow</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Table -->
+        <div class="card-table">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Document Name</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Confidence</th>
+                            <th>Pages</th>
+                            <th>OCR Engine</th>
+                            <th>Processed Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentsTableBody">
+                        {% if documents %}
+                            {% for doc in documents %}
+                            <tr>
+                                <td class="doc-name" style="font-weight: 600;">
+                                    <a href="/documents/{{ doc.id }}" style="color: var(--primary); text-decoration: none;">
+                                        {{ doc.document_name }}
+                                    </a>
+                                </td>
+                                <td class="doc-type">
+                                    <span class="badge badge-info">{{ doc.document_type|replace('_', ' ') }}</span>
+                                </td>
+                                <td>
+                                    {% if doc.processing_status == "PASS" %}
+                                        <span class="badge badge-pass">PASS</span>
+                                    {% else %}
+                                        <span class="badge badge-fail">FAILED</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if doc.overall_confidence is not none %}
+                                        <strong>{{ (doc.overall_confidence * 100)|round(1) }}%</strong>
+                                    {% else %}
+                                        <span class="badge badge-na">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ doc.page_count }}</td>
+                                <td>
+                                    {% if doc.ocr_used %}
+                                        <span class="badge badge-warning">OCR Vision</span>
+                                    {% else %}
+                                        <span class="badge badge-success">Native Text</span>
+                                    {% endif %}
+                                </td>
+                                <td style="color: var(--text-muted); font-size: 0.85rem;">
+                                    {{ doc.processed_at[:19]|replace('T', ' ') if doc.processed_at else '-' }}
+                                    ({{ doc.processing_time_ms }} ms)
+                                </td>
+                                <td>
+                                    <a href="/documents/{{ doc.id }}" class="btn btn-secondary btn-sm">View Result</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                                    No documents processed yet. Upload a PDF, JPG, or PNG document above to begin.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Intelligent Document Extraction, Validation & API Platform &bull; Deployed Prototype</p>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

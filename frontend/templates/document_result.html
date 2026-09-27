@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result: {{ doc.document_name }} - DocIntel</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="/" class="brand">
+            <span class="brand-icon">📑</span>
+            <span>DocIntel Platform</span>
+        </a>
+        <div class="nav-links">
+            <a href="/" class="nav-link">&larr; Back to Dashboard</a>
+            <a href="/docs" target="_blank" class="nav-link">Swagger Docs</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Document Result Header Card -->
+        <div class="result-header-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                        <h1 style="font-size: 1.6rem; font-weight: 700;">{{ doc.document_name }}</h1>
+                        <span class="badge badge-info">{{ doc.document_type|replace('_', ' ') }}</span>
+                        {% if doc.processing_status == "PASS" %}
+                            <span class="badge badge-pass" style="font-size: 0.9rem; padding: 0.35rem 0.8rem;">PASS</span>
+                        {% else %}
+                            <span class="badge badge-fail" style="font-size: 0.9rem; padding: 0.35rem 0.8rem;">FAILED</span>
+                        {% endif %}
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        Processed at {{ doc.processing_metadata.processed_at }} &bull; Latency: {{ doc.processing_metadata.processing_time_ms }} ms
+                    </p>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button onclick="copyJsonToClipboard()" id="copyJsonBtn" class="btn btn-secondary btn-sm">
+                        📋 Copy Raw JSON
+                    </button>
+                    <a href="/" class="btn btn-primary btn-sm">Upload Another</a>
+                </div>
+            </div>
+
+            <!-- Meta attributes grid -->
+            <div class="result-meta-grid">
+                <div>
+                    <div class="stat-label">Overall Confidence</div>
+                    <div style="font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem;">
+                        {% if doc.overall_confidence is not none %}
+                            {{ (doc.overall_confidence * 100)|round(1) }}%
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    <div class="stat-label">File Type</div>
+                    <div style="font-size: 1rem; font-weight: 600; margin-top: 0.25rem;">
+                        {{ doc.file_validation.file_type }}
+                    </div>
+                </div>
+                <div>
+                    <div class="stat-label">Page Count</div>
+                    <div style="font-size: 1.25rem; font-weight: 700; margin-top: 0.25rem;">
+                        {{ doc.file_validation.page_count }} / 3 max
+                    </div>
+                </div>
+                <div>
+                    <div class="stat-label">Extraction Method</div>
+                    <div style="font-size: 1rem; font-weight: 600; margin-top: 0.25rem;">
+                        {% if doc.processing_metadata.ocr_used %}
+                            <span class="badge badge-warning">OCR / Vision</span>
+                        {% else %}
+                            <span class="badge badge-success">Native Digital Text</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Financial Calculation Validations -->
+        <div class="section-card">
+            <div class="section-title">
+                <span>Financial Reconciliation & Arithmetic Validations</span>
+                {% if doc.validation.overall_status == "PASS" %}
+                    <span class="badge badge-pass">ALL VALIDATIONS PASSED</span>
+                {% else %}
+                    <span class="badge badge-fail">VALIDATIONS FAILED</span>
+                {% endif %}
+            </div>
+
+            {% if doc.validation.issues %}
+            <div class="alert alert-danger" style="margin-bottom: 1.25rem;">
+                <div>
+                    <strong>Validation Issues Detected:</strong>
+                    <ul style="margin-left: 1.25rem; margin-top: 0.25rem;">
+                        {% for issue in doc.validation.issues %}
+                            <li>{{ issue }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Validation Check</th>
+                            <th>Formula Tested</th>
+                            <th>Calculated</th>
+                            <th>Reported</th>
+                            <th>Variance</th>
+                            <th>Operands Used</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if doc.validation.checks %}
+                            {% for check in doc.validation.checks %}
+                            <tr>
+                                <td style="font-weight: 600;">{{ check.name|replace('_', ' ') }}</td>
+                                <td><code>{{ check.formula }}</code></td>
+                                <td>
+                                    {% if check.calculated_value is not none %}
+                                        <strong>{{ check.calculated_value }}</strong>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if check.reported_value is not none %}
+                                        {{ check.reported_value }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if check.variance is not none %}
+                                        <span style="font-weight: 600; color: {% if check.variance > 0.05 %}var(--danger){% else %}var(--success){% endif %};">
+                                            {{ check.variance }}
+                                        </span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td style="font-size: 0.8rem; color: var(--text-muted);">
+                                    {% for k, v in check.operands.items() %}
+                                        <span>{{ k }}: <strong>{{ v }}</strong></span>{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% if check.status == "PASS" %}
+                                        <span class="badge badge-pass">PASS</span>
+                                    {% elif check.status == "FAIL" %}
+                                        <span class="badge badge-fail">FAIL</span>
+                                    {% else %}
+                                        <span class="badge badge-na">N/A</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                                    No financial checks applicable for this document.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 2: Extracted Key-Value Fields -->
+        <div class="section-card">
+            <div class="section-title">
+                <span>Extracted Key-Value Fields & Grounding Evidence</span>
+                <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">
+                    Red = Missing &bull; Yellow = Low Confidence (&lt;80%) &bull; Gray = Extracted with Evidence
+                </span>
+            </div>
+
+            <div class="kv-grid">
+                {% for key, item in doc.extracted_data.items() %}
+                    {% if key not in ['line_items', 'asset_components', 'liability_equity_components', 'periods'] %}
+                        {% set is_dict = item is mapping %}
+                        {% set val = item.value if is_dict and 'value' in item else item %}
+                        {% set conf = item.confidence if is_dict and 'confidence' in item else none %}
+                        {% set page = item.page_number if is_dict and 'page_number' in item else none %}
+                        {% set evidence = item.evidence.source_text if is_dict and item.evidence and 'source_text' in item.evidence else none %}
+                        
+                        {% set is_missing = val is none or val == "" %}
+                        {% set is_low_conf = conf is not none and conf < 0.80 and not is_missing %}
+
+                        <div class="kv-item {% if is_missing %}missing{% elif is_low_conf %}low-conf{% endif %}">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span class="kv-label">{{ key|replace('_', ' ') }}</span>
+                                {% if conf is not none %}
+                                    <span class="badge {% if is_missing %}badge-fail{% elif is_low_conf %}badge-warning{% else %}badge-info{% endif %}" style="font-size: 0.7rem;">
+                                        {{ (conf * 100)|round(0)|int }}%
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <div class="kv-value">
+                                {% if is_missing %}
+                                    <span style="color: var(--danger); font-style: italic; font-weight: normal;">Missing / Unreadable</span>
+                                {% else %}
+                                    {{ val }}
+                                {% endif %}
+                            </div>
+
+                            {% if evidence or page %}
+                            <div class="kv-evidence">
+                                {% if page %}<strong>Page {{ page }}</strong>: {% endif %}
+                                <span>"{{ evidence if evidence else val }}"</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Section 3: Tables / Line Items (if present) -->
+        {% if doc.extracted_data.line_items %}
+        <div class="section-card">
+            <h2 class="section-title">Invoice Line Items</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in doc.extracted_data.line_items %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td style="font-weight: 600;">{{ item.description }}</td>
+                            <td>{{ item.quantity if item.quantity is not none else '-' }}</td>
+                            <td>{{ item.unit_price if item.unit_price is not none else '-' }}</td>
+                            <td style="font-weight: 700;">{{ item.amount if item.amount is not none else '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Section 4: Raw Structured JSON (Section 6 Requirement) -->
+        <div class="section-card">
+            <div class="section-title">
+                <span>Raw Structured JSON Response (Section 5.2 Schema)</span>
+                <button onclick="copyJsonToClipboard()" class="btn btn-secondary btn-sm">Copy to Clipboard</button>
+            </div>
+            <pre class="json-box"><code id="rawJsonContent">{{ doc | tojson(indent=2) }}</code></pre>
+        </div>
+    </main>
+
+    <footer>
+        <p>Intelligent Document Extraction, Validation & API Platform &bull; Evaluation Environment</p>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

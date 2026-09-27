@@ -1,0 +1,131 @@
+{
+  "document_name": "sample_cash_flow.pdf",
+  "document_type": "cash_flow_statement",
+  "processing_status": "PASS",
+  "overall_confidence": 0.98,
+  "file_validation": {
+    "file_type": "application/pdf",
+    "is_supported": true,
+    "is_readable": true,
+    "page_count": 1,
+    "status": "PASS"
+  },
+  "extracted_data": {
+    "company_name": {
+      "value": "Vanguard Enterprises Group",
+      "confidence": 0.98,
+      "page_number": 1
+    },
+    "currency": {
+      "value": "USD",
+      "confidence": 0.99,
+      "page_number": 1
+    },
+    "operating_cash_flow": {
+      "value": 150000.00,
+      "confidence": 0.98,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Net Cash Flow from Operating Activities: $150,000",
+        "page_number": 1
+      }
+    },
+    "investing_cash_flow": {
+      "value": -45000.00,
+      "confidence": 0.97,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Net Cash Used in Investing Activities: ($45,000)",
+        "page_number": 1
+      }
+    },
+    "financing_cash_flow": {
+      "value": -25000.00,
+      "confidence": 0.97,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Net Cash Used in Financing Activities: ($25,000)",
+        "page_number": 1
+      }
+    },
+    "fx_adjustment": {
+      "value": 0.00,
+      "confidence": 0.95,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "FX Translation Adjustment: $0.00",
+        "page_number": 1
+      }
+    },
+    "net_change_in_cash": {
+      "value": 80000.00,
+      "confidence": 0.99,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Net Increase in Cash & Cash Equivalents: $80,000",
+        "page_number": 1
+      }
+    },
+    "opening_cash": {
+      "value": 40000.00,
+      "confidence": 0.98,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Opening Cash & Cash Equivalents: $40,000",
+        "page_number": 1
+      }
+    },
+    "cash_acquired_on_amalgamation": {
+      "value": 0.00,
+      "confidence": 0.95,
+      "page_number": 1
+    },
+    "closing_cash": {
+      "value": 120000.00,
+      "confidence": 0.99,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Closing Cash & Cash Equivalents: $120,000",
+        "page_number": 1
+      }
+    }
+  },
+  "validation": {
+    "checks": [
+      {
+        "name": "current_net_cash_flow_check",
+        "formula": "operating_cash_flow + investing_cash_flow + financing_cash_flow + fx_adjustment",
+        "operands": {
+          "operating_cash_flow": 150000.00,
+          "investing_cash_flow": -45000.00,
+          "financing_cash_flow": -25000.00,
+          "fx_adjustment": 0.00
+        },
+        "calculated_value": 80000.00,
+        "reported_value": 80000.00,
+        "variance": 0.00,
+        "status": "PASS"
+      },
+      {
+        "name": "current_closing_cash_reconciliation_check",
+        "formula": "opening_cash + net_increase_in_cash + adjustments",
+        "operands": {
+          "opening_cash": 40000.00,
+          "net_increase": 80000.00,
+          "adjustments": 0.00
+        },
+        "calculated_value": 120000.00,
+        "reported_value": 120000.00,
+        "variance": 0.00,
+        "status": "PASS"
+      }
+    ],
+    "overall_status": "PASS",
+    "issues": []
+  },
+  "processing_metadata": {
+    "ocr_used": false,
+    "processed_at": "2026-09-08T12:15:00Z",
+    "processing_time_ms": 1620
+  }
+}

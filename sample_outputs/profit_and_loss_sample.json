@@ -1,0 +1,202 @@
+{
+  "document_name": "sample_profit_and_loss.pdf",
+  "document_type": "profit_and_loss",
+  "processing_status": "PASS",
+  "overall_confidence": 0.98,
+  "file_validation": {
+    "file_type": "application/pdf",
+    "is_supported": true,
+    "is_readable": true,
+    "page_count": 1,
+    "status": "PASS"
+  },
+  "extracted_data": {
+    "company_name": {
+      "value": "Nexus Financial Bank Ltd",
+      "confidence": 0.98,
+      "page_number": 1
+    },
+    "currency": {
+      "value": "USD",
+      "confidence": 0.99,
+      "page_number": 1
+    },
+    "interest_earned": {
+      "value": 450000.00,
+      "confidence": 0.98,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Interest Earned: $450,000",
+        "page_number": 1
+      }
+    },
+    "other_income": {
+      "value": 50000.00,
+      "confidence": 0.97,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Other Income: $50,000",
+        "page_number": 1
+      }
+    },
+    "total_income": {
+      "value": 500000.00,
+      "confidence": 0.99,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Total Income: $500,000",
+        "page_number": 1
+      }
+    },
+    "interest_expended": {
+      "value": 180000.00,
+      "confidence": 0.97,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Interest Expended: $180,000",
+        "page_number": 1
+      }
+    },
+    "operating_expenses": {
+      "value": 120000.00,
+      "confidence": 0.98,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Operating Expenses: $120,000",
+        "page_number": 1
+      }
+    },
+    "provisions_and_contingencies": {
+      "value": 20000.00,
+      "confidence": 0.95,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Provisions & Contingencies: $20,000",
+        "page_number": 1
+      }
+    },
+    "total_expenditure": {
+      "value": 320000.00,
+      "confidence": 0.99,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Total Expenditure: $320,000",
+        "page_number": 1
+      }
+    },
+    "profit_before_minority_interest": {
+      "value": 180000.00,
+      "confidence": 0.98,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Consolidated Net Profit Before Minority Interest: $180,000",
+        "page_number": 1
+      }
+    },
+    "minority_interest": {
+      "value": 15000.00,
+      "confidence": 0.96,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Minority Interest: $15,000",
+        "page_number": 1
+      }
+    },
+    "consolidated_net_profit": {
+      "value": 165000.00,
+      "confidence": 0.99,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Consolidated Net Profit Attributable to Group: $165,000",
+        "page_number": 1
+      }
+    },
+    "current_profit": {
+      "value": 165000.00,
+      "confidence": 0.98,
+      "page_number": 1
+    },
+    "brought_forward_profit": {
+      "value": 35000.00,
+      "confidence": 0.96,
+      "page_number": 1
+    },
+    "total_available_for_appropriation": {
+      "value": 200000.00,
+      "confidence": 0.99,
+      "page_number": 1
+    }
+  },
+  "validation": {
+    "checks": [
+      {
+        "name": "current_total_income_check",
+        "formula": "interest_earned (or revenue) + other_income",
+        "operands": {
+          "primary_income": 450000.00,
+          "other_income": 50000.00
+        },
+        "calculated_value": 500000.00,
+        "reported_value": 500000.00,
+        "variance": 0.00,
+        "status": "PASS"
+      },
+      {
+        "name": "current_total_expenditure_check",
+        "formula": "interest_expended + operating_expenses + provisions",
+        "operands": {
+          "interest_expended": 180000.00,
+          "operating_expenses": 120000.00,
+          "provisions": 20000.00
+        },
+        "calculated_value": 320000.00,
+        "reported_value": 320000.00,
+        "variance": 0.00,
+        "status": "PASS"
+      },
+      {
+        "name": "current_profit_before_minority_interest_check",
+        "formula": "total_income - total_expenditure",
+        "operands": {
+          "total_income": 500000.00,
+          "total_expenditure": 320000.00
+        },
+        "calculated_value": 180000.00,
+        "reported_value": 180000.00,
+        "variance": 0.00,
+        "status": "PASS"
+      },
+      {
+        "name": "current_consolidated_net_profit_attributable_check",
+        "formula": "profit_before_minority_interest - minority_interest",
+        "operands": {
+          "profit_before_minority_interest": 180000.00,
+          "minority_interest": 15000.00
+        },
+        "calculated_value": 165000.00,
+        "reported_value": 165000.00,
+        "variance": 0.00,
+        "status": "PASS"
+      },
+      {
+        "name": "current_appropriation_check",
+        "formula": "current_profit + brought_forward_profit",
+        "operands": {
+          "current_profit": 165000.00,
+          "brought_forward_profit": 35000.00
+        },
+        "calculated_value": 200000.00,
+        "reported_value": 200000.00,
+        "variance": 0.00,
+        "status": "PASS"
+      }
+    ],
+    "overall_status": "PASS",
+    "issues": []
+  },
+  "processing_metadata": {
+    "ocr_used": false,
+    "processed_at": "2026-09-08T12:10:00Z",
+    "processing_time_ms": 1940
+  }
+}

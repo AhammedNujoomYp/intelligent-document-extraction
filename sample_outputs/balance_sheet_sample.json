@@ -1,0 +1,130 @@
+{
+  "document_name": "sample_balance_sheet.pdf",
+  "document_type": "balance_sheet",
+  "processing_status": "PASS",
+  "overall_confidence": 0.97,
+  "file_validation": {
+    "file_type": "application/pdf",
+    "is_supported": true,
+    "is_readable": true,
+    "page_count": 1,
+    "status": "PASS"
+  },
+  "extracted_data": {
+    "company_name": {
+      "value": "Acme Holdings Ltd",
+      "confidence": 0.98,
+      "page_number": 1
+    },
+    "currency": {
+      "value": "USD",
+      "confidence": 0.99,
+      "page_number": 1
+    },
+    "total_assets": {
+      "value": 5000000.00,
+      "confidence": 0.99,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Total Assets: $5,000,000",
+        "page_number": 1
+      }
+    },
+    "total_liabilities": {
+      "value": 2000000.00,
+      "confidence": 0.98,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Total Liabilities: $2,000,000",
+        "page_number": 1
+      }
+    },
+    "total_equity": {
+      "value": 3000000.00,
+      "confidence": 0.98,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Total Stockholders' Equity: $3,000,000",
+        "page_number": 1
+      }
+    },
+    "total_capital_and_liabilities": {
+      "value": 5000000.00,
+      "confidence": 0.99,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Total Liabilities and Equity: $5,000,000",
+        "page_number": 1
+      }
+    },
+    "asset_components": [
+      {
+        "name": "Current Assets",
+        "value": 2000000.00
+      },
+      {
+        "name": "Non-Current Assets",
+        "value": 3000000.00
+      }
+    ],
+    "liability_equity_components": [
+      {
+        "name": "Current Liabilities",
+        "value": 1200000.00
+      },
+      {
+        "name": "Non-Current Liabilities",
+        "value": 800000.00
+      },
+      {
+        "name": "Total Equity",
+        "value": 3000000.00
+      }
+    ]
+  },
+  "validation": {
+    "checks": [
+      {
+        "name": "current_balance_sheet_equation",
+        "formula": "total_capital_and_liabilities ≈ total_assets",
+        "operands": {
+          "total_capital_and_liabilities": 5000000.00,
+          "total_assets": 5000000.00
+        },
+        "calculated_value": 5000000.00,
+        "reported_value": 5000000.00,
+        "variance": 0.00,
+        "status": "PASS"
+      },
+      {
+        "name": "current_asset_components_sum",
+        "formula": "sum(asset_components)",
+        "operands": {
+          "components_sum": 5000000.00
+        },
+        "calculated_value": 5000000.00,
+        "reported_value": 5000000.00,
+        "variance": 0.00,
+        "status": "PASS"
+      },
+      {
+        "name": "current_capital_liabilities_components_sum",
+        "formula": "sum(capital_and_liability_components)",
+        "operands": {
+          "components_sum": 5000000.00
+        },
+        "calculated_value": 5000000.00,
+        "reported_value": 5000000.00,
+        "variance": 0.00,
+        "status": "PASS"
+      }
+    ],
+    "overall_status": "PASS",
+    "issues": []
+  },
+  "processing_metadata": {
+    "ocr_used": false,
+    "processed_at": "2026-09-08T12:05:00Z",
+    "processing_time_ms": 1850
+  }
+}

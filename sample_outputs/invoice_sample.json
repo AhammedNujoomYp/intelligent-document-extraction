@@ -1,0 +1,147 @@
+{
+  "document_name": "sample_invoice.pdf",
+  "document_type": "invoice",
+  "processing_status": "PASS",
+  "overall_confidence": 0.98,
+  "file_validation": {
+    "file_type": "application/pdf",
+    "is_supported": true,
+    "is_readable": true,
+    "page_count": 1,
+    "status": "PASS"
+  },
+  "extracted_data": {
+    "invoice_number": {
+      "value": "INV-23891",
+      "confidence": 0.99,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Invoice No: INV-23891",
+        "page_number": 1
+      }
+    },
+    "invoice_date": {
+      "value": "2026-08-15",
+      "confidence": 0.98,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Date: 2026-08-15",
+        "page_number": 1
+      }
+    },
+    "vendor_name": {
+      "value": "ABC Technologies Inc.",
+      "confidence": 0.97,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "From: ABC Technologies Inc.",
+        "page_number": 1
+      }
+    },
+    "customer_name": {
+      "value": "Global Enterprises Corp",
+      "confidence": 0.96,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Bill To: Global Enterprises Corp",
+        "page_number": 1
+      }
+    },
+    "currency": {
+      "value": "USD",
+      "confidence": 0.99,
+      "page_number": 1
+    },
+    "subtotal": {
+      "value": 12500.00,
+      "confidence": 0.98,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Subtotal: $12,500.00",
+        "page_number": 1
+      }
+    },
+    "tax_amount": {
+      "value": 625.00,
+      "confidence": 0.97,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Tax (5%): $625.00",
+        "page_number": 1
+      }
+    },
+    "discount": {
+      "value": 0.00,
+      "confidence": 0.95,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Discount: $0.00",
+        "page_number": 1
+      }
+    },
+    "total_amount": {
+      "value": 13125.00,
+      "confidence": 0.99,
+      "page_number": 1,
+      "evidence": {
+        "source_text": "Total Amount Due: $13,125.00",
+        "page_number": 1
+      }
+    },
+    "line_items": [
+      {
+        "description": "Cloud Architecture & AI Consulting",
+        "quantity": 1.0,
+        "unit_price": 12500.00,
+        "amount": 12500.00
+      }
+    ]
+  },
+  "validation": {
+    "checks": [
+      {
+        "name": "line_item_1_total_check",
+        "formula": "quantity * unit_price",
+        "operands": {
+          "quantity": 1.0,
+          "unit_price": 12500.00
+        },
+        "calculated_value": 12500.00,
+        "reported_value": 12500.00,
+        "variance": 0.00,
+        "status": "PASS"
+      },
+      {
+        "name": "line_items_sum_reconciliation",
+        "formula": "sum(line_items.amount)",
+        "operands": {
+          "line_totals_sum": 12500.00
+        },
+        "calculated_value": 12500.00,
+        "reported_value": 12500.00,
+        "variance": 0.00,
+        "status": "PASS"
+      },
+      {
+        "name": "invoice_total_check",
+        "formula": "subtotal + tax_amount - discount",
+        "operands": {
+          "subtotal": 12500.00,
+          "tax_amount": 625.00,
+          "discount": 0.00
+        },
+        "calculated_value": 13125.00,
+        "reported_value": 13125.00,
+        "variance": 0.00,
+        "status": "PASS"
+      }
+    ],
+    "overall_status": "PASS",
+    "issues": []
+  },
+  "processing_metadata": {
+    "ocr_used": false,
+    "processed_at": "2026-09-08T12:00:00Z",
+    "processing_time_ms": 1420
+  }
+}
